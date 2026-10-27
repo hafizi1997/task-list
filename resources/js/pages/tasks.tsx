@@ -43,7 +43,11 @@ export default function Tasks({ tasks }: { tasks: Task[] }) {
                 <header className="flex flex-col justify-between gap-5 sm:flex-row sm:items-start">
                     <div>
                         <p className="mb-2 text-sm font-medium text-[#777f91]">
-                            Tuesday, October 27
+                            {new Intl.DateTimeFormat("en", {
+                                weekday: "long",
+                                month: "long",
+                                day: "numeric",
+                            }).format(new Date())}
                         </p>
                         <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
                             Good morning 👋
