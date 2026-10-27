@@ -8,7 +8,7 @@ class Task extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title', 'description', 'long_description'];
+    protected $fillable = ['title', 'description', 'long_description', 'completed'];
 
     protected function casts(): array
     {

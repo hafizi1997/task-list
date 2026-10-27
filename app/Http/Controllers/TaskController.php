@@ -18,7 +18,7 @@ class TaskController extends Controller
     public function store(StoreTaskRequest $request)
     {
         Task::create($request->validated());
-        return to_route('tasks');
+        return to_route('tasks')->with('success', 'Task created successfully.');
     }
 
     public function show(Task $task): Response
@@ -29,12 +29,12 @@ class TaskController extends Controller
     public function update(UpdateTaskRequest $request, Task $task)
     {
         $task->update($request->validated());
-        return to_route('tasks.show', $task);
+        return to_route('tasks.show', $task)->with('success', 'Task updated successfully.');
     }
 
     public function toggleCompletion(Task $task)
     {
         $task->update(['completed' => ! $task->completed]);
-        return to_route('tasks.show', $task);
+        return to_route('tasks.show', $task)->with('success', $task->completed ? 'Task marked as complete.' : 'Task marked as incomplete.');
     }
 }
