@@ -1,5 +1,14 @@
 @import 'tailwindcss';
 
+:root {
+    --background: #f7f8fa;
+    --foreground: #172033;
+    --primary: #5b5ce2;
+    --primary-foreground: #ffffff;
+    --border: #e9ebf1;
+    --ring: #5b5ce2;
+}
+
 @source '../views';
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 

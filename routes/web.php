@@ -1,23 +1,15 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Models\Task;
+use App\Http\Controllers\TaskController;
 
 Route::inertia('/', 'welcome')->name('home');
 
 Route::inertia('/dashboard', 'dashboard')->name('dashboard');
 
-Route::get('/tasks', function () {
-    return inertia('tasks', [
-        'tasks' => Task::query()->latest()->get(),
-    ]);
-})->name('tasks');
-
-Route::get('/tasks/{task}', function (Task $task) {
-    return inertia('task-detail', [
-        'task' => $task,
-    ]);
-})->name('tasks.show');
+Route::get('/tasks', [TaskController::class, 'index'])->name('tasks');
+Route::post('/tasks', [TaskController::class, 'store'])->name('tasks.store');
+Route::get('/tasks/{task}', [TaskController::class, 'show'])->name('tasks.show');
 
 // how to pass data to inertia
 Route::get('/profile/{user}', function ($user) {
