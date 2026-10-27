@@ -22,12 +22,6 @@ export function AppLayout({ children }: PropsWithChildren) {
                         >
                             ✓ My tasks
                         </Link>
-                        <Link
-                            href="/dashboard"
-                            className="flex items-center gap-3 rounded-xl px-4 py-3 text-[#7b8496] hover:bg-[#f7f8fa]"
-                        >
-                            ▦ Dashboard
-                        </Link>
                     </nav>
                     <div className="mt-auto rounded-2xl bg-[#f4f5ff] p-4 text-sm">
                         <p className="font-semibold text-[#303163]">

@@ -37,4 +37,10 @@ class TaskController extends Controller
         $task->update(['completed' => ! $task->completed]);
         return to_route('tasks.show', $task)->with('success', $task->completed ? 'Task marked as complete.' : 'Task marked as incomplete.');
     }
+
+    public function destroy(Task $task)
+    {
+        $task->delete();
+        return to_route('tasks')->with('success', 'Task deleted successfully.');
+    }
 }

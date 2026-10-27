@@ -1,6 +1,7 @@
 import { Head, Link, router } from "@inertiajs/react";
 import { useState } from "react";
 import { EditTaskDialog } from "@/components/tasks/edit-task-dialog";
+import { DeleteTaskDialog } from "@/components/tasks/delete-task-dialog";
 
 type Task = {
     id: number;
@@ -24,6 +25,7 @@ function formatDate(value: string) {
 
 export default function TaskDetail({ task }: Props) {
     const [showEditDialog, setShowEditDialog] = useState(false);
+    const [showDeleteDialog, setShowDeleteDialog] = useState(false);
     return (
         <>
             <Head title={task.title} />
@@ -112,6 +114,12 @@ export default function TaskDetail({ task }: Props) {
                                     Edit task
                                 </button>
                                 <button
+                                    onClick={() => setShowDeleteDialog(true)}
+                                    className="rounded-xl border border-red-200 px-5 py-3 text-sm font-semibold text-red-600 transition hover:bg-red-50"
+                                >
+                                    Delete
+                                </button>
+                                <button
                                     onClick={() =>
                                         router.patch(
                                             `/tasks/${task.id}/completion`,
@@ -137,6 +145,11 @@ export default function TaskDetail({ task }: Props) {
                 task={task}
                 open={showEditDialog}
                 onClose={() => setShowEditDialog(false)}
+            />
+            <DeleteTaskDialog
+                task={task}
+                open={showDeleteDialog}
+                onClose={() => setShowDeleteDialog(false)}
             />
         </>
     );
