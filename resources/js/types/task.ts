@@ -7,3 +7,11 @@ export type Task = {
     created_at: string;
     updated_at?: string;
 };
+
+export type PaginatedTasks = {
+    data: Task[];
+    current_page: number;
+    last_page: number;
+    total: number;
+    links: { url: string | null; label: string; active: boolean }[];
+};

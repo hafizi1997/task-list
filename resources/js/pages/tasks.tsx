@@ -1,12 +1,13 @@
-import { Head } from "@inertiajs/react";
-import { useMemo, useState } from "react";
+import { Head, router } from "@inertiajs/react";
+import { useState } from "react";
 import { AppLayout } from "@/components/layouts/app-layout";
 import { CreateTaskDialog } from "@/components/tasks/create-task-dialog";
 import { TaskCard } from "@/components/tasks/task-card";
 import { TaskFilters } from "@/components/tasks/task-filters";
+import { TaskPagination } from "@/components/tasks/task-pagination";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import type { Task } from "@/types/task";
+import type { PaginatedTasks } from "@/types/task";
 
 const formatDate = (value: string) =>
     new Intl.DateTimeFormat("en", {
@@ -15,26 +16,20 @@ const formatDate = (value: string) =>
         year: "numeric",
     }).format(new Date(value));
 
-export default function Tasks({ tasks }: { tasks: Task[] }) {
+export default function Tasks({ tasks, stats }: { tasks: PaginatedTasks; stats: { total: number; completed: number } }) {
     const [filter, setFilter] = useState<"all" | "open" | "completed">("all");
     const [query, setQuery] = useState("");
     const [showCreateModal, setShowCreateModal] = useState(false);
-    const completed = tasks.filter((task) => task.completed).length;
-    const visibleTasks = useMemo(
-        () =>
-            tasks.filter((task) => {
-                const matchesFilter =
-                    filter === "all" ||
-                    (filter === "completed" ? task.completed : !task.completed);
-                return (
-                    matchesFilter &&
-                    `${task.title} ${task.description}`
-                        .toLowerCase()
-                        .includes(query.toLowerCase())
-                );
-            }),
-        [filter, query, tasks],
-    );
+    const completed = stats.completed;
+    const applyFilters = (nextFilter = filter, nextQuery = query) =>
+        router.get(
+            "/tasks",
+            {
+                filter: nextFilter === "all" ? undefined : nextFilter,
+                search: nextQuery || undefined,
+            },
+            { preserveState: true, preserveScroll: true },
+        );
 
     return (
         <>
@@ -64,7 +59,7 @@ export default function Tasks({ tasks }: { tasks: Task[] }) {
                     <Card className="p-5">
                         <p className="text-sm text-[#7c8495]">Total tasks</p>
                         <p className="mt-2 text-3xl font-bold">
-                            {tasks.length}
+                            {stats.total}
                         </p>
                     </Card>
                     <Card className="p-5">
@@ -76,19 +71,23 @@ export default function Tasks({ tasks }: { tasks: Task[] }) {
                     <Card className="p-5">
                         <p className="text-sm text-[#7c8495]">Remaining</p>
                         <p className="mt-2 text-3xl font-bold text-[#e29a39]">
-                            {tasks.length - completed}
+                            {stats.total - stats.completed}
                         </p>
                     </Card>
                 </div>
                 <TaskFilters
                     filter={filter}
-                    setFilter={setFilter}
+                    setFilter={(value) => {
+                        setFilter(value);
+                        applyFilters(value, query);
+                    }}
                     query={query}
                     setQuery={setQuery}
+                    onSearch={() => applyFilters(filter, query)}
                 />
                 <Card className="mt-4 overflow-hidden">
-                    {visibleTasks.length ? (
-                        visibleTasks.map((task) => (
+                    {tasks.data.length ? (
+                        tasks.data.map((task) => (
                             <TaskCard
                                 key={task.id}
                                 task={task}
@@ -100,6 +99,7 @@ export default function Tasks({ tasks }: { tasks: Task[] }) {
                             No tasks match your filters.
                         </p>
                     )}
+                    <TaskPagination links={tasks.links} />
                 </Card>
                 <CreateTaskDialog
                     open={showCreateModal}

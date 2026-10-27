@@ -5,14 +5,28 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
 use App\Models\Task;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class TaskController extends Controller
 {
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        return Inertia::render('tasks', ['tasks' => Task::query()->latest()->get()]);
+        $query = Task::query()->latest();
+        if ($request->filled('search')) {
+            $search = $request->string('search')->toString();
+            $query->where(fn ($builder) => $builder->where('title', 'like', "%{$search}%")->orWhere('description', 'like', "%{$search}%"));
+        }
+        if ($request->input('filter') === 'completed') $query->where('completed', true);
+        if ($request->input('filter') === 'open') $query->where('completed', false);
+        return Inertia::render('tasks', [
+            'tasks' => $query->paginate(20)->withQueryString(),
+            'stats' => [
+                'total' => Task::count(),
+                'completed' => Task::where('completed', true)->count(),
+            ],
+        ]);
     }
 
     public function store(StoreTaskRequest $request)
