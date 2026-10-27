@@ -1,0 +1,1 @@
+export function TaskStatus({ completed }: { completed: boolean }) { return <div className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2 text-xs ${completed ? 'border-[#42b883] bg-[#42b883] text-white' : 'border-[#cfd4df]'}`}>{completed && '✓'}</div>; }
