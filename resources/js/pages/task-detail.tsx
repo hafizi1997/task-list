@@ -2,16 +2,7 @@ import { Head, Link, router } from "@inertiajs/react";
 import { useState } from "react";
 import { EditTaskDialog } from "@/components/tasks/edit-task-dialog";
 import { DeleteTaskDialog } from "@/components/tasks/delete-task-dialog";
-
-type Task = {
-    id: number;
-    title: string;
-    description: string;
-    long_description: string | null;
-    completed: boolean;
-    created_at: string;
-    updated_at: string;
-};
+import type { Task } from "@/types/task";
 
 type Props = { task: Task };
 
@@ -80,7 +71,7 @@ export default function TaskDetail({ task }: Props) {
                                         Last updated
                                     </p>
                                     <p className="mt-1 font-semibold">
-                                        {formatDate(task.updated_at)}
+                                        {formatDate(task.updated_at ?? task.created_at)}
                                     </p>
                                 </div>
                             </div>
