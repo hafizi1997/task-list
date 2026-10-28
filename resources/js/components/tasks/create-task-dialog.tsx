@@ -6,11 +6,20 @@ import { TaskForm } from "@/components/tasks/task-form";
 export function CreateTaskDialog({
     open,
     onClose,
+    statuses,
 }: {
     open: boolean;
     onClose: () => void;
+    statuses: { id: number; name: string; slug: string }[];
 }) {
-    const form = useForm({ title: "", description: "", long_description: "" });
+    const form = useForm({
+        title: "",
+        description: "",
+        long_description: "",
+        status_id:
+            statuses.find((status) => status.slug === "open")?.id.toString() ??
+            "",
+    });
     function submit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
         form.post("/tasks", {
@@ -35,6 +44,7 @@ export function CreateTaskDialog({
                 submitLabel="Create task"
                 onSubmit={submit}
                 onCancel={onClose}
+                statuses={statuses}
             />
         </Dialog>
     );

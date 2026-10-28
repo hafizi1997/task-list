@@ -29,17 +29,14 @@ class DatabaseSeeder extends Seeder
 
         Task::factory(12)->create([
             'status_id' => $open->id,
-            'completed' => false,
         ]);
 
         Task::factory(4)->create([
             'status_id' => $pending->id,
-            'completed' => false,
         ]);
 
         Task::factory(4)->create([
             'status_id' => $completed->id,
-            'completed' => true,
         ]);
     }
 }

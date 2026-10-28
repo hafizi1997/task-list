@@ -22,6 +22,7 @@ class TaskController extends Controller
         if ($request->input('filter')) $query->whereHas('status', fn ($status) => $status->where('slug', $request->input('filter')));
         return Inertia::render('tasks', [
             'tasks' => $query->paginate(20)->withQueryString(),
+            'statuses' => Status::orderBy('id')->get(['id', 'name', 'slug']),
             'stats' => [
                 'total' => Task::count(),
                 'completed' => Task::whereHas('status', fn ($status) => $status->where('slug', 'completed'))->count(),
@@ -31,13 +32,13 @@ class TaskController extends Controller
 
     public function store(StoreTaskRequest $request)
     {
-        $task = Task::create([...$request->validated(), 'status_id' => Status::where('slug', 'open')->value('id'), 'completed' => false]);
+        Task::create($request->validated());
         return to_route('tasks')->with('success', 'Task created successfully.');
     }
 
     public function show(Task $task): Response
     {
-        return Inertia::render('task-detail', ['task' => $task->load('status')]);
+        return Inertia::render('task-detail', ['task' => $task->load('status'), 'statuses' => Status::orderBy('id')->get(['id', 'name', 'slug'])]);
     }
 
     public function update(UpdateTaskRequest $request, Task $task)
@@ -50,7 +51,7 @@ class TaskController extends Controller
     {
         $isCompleted = $task->status?->slug === 'completed';
         $status = Status::where('slug', $isCompleted ? 'open' : 'completed')->firstOrFail();
-        $task->update(['status_id' => $status->id, 'completed' => ! $isCompleted]);
+        $task->update(['status_id' => $status->id]);
         return to_route('tasks.show', $task)->with('success', $isCompleted ? 'Task marked as incomplete.' : 'Task marked as complete.');
     }
 

@@ -21,7 +21,6 @@ class TaskFactory extends Factory
             'title' => $this->faker->sentence(),
             'description' => $this->faker->paragraph(),
             'long_description' => $this->faker->paragraph(7, true),
-            'completed' => false,
         ];
     }
 }

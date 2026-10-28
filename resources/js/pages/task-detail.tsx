@@ -2,9 +2,9 @@ import { Head, Link, router } from "@inertiajs/react";
 import { useState } from "react";
 import { EditTaskDialog } from "@/components/tasks/edit-task-dialog";
 import { DeleteTaskDialog } from "@/components/tasks/delete-task-dialog";
-import type { Task } from "@/types/task";
+import type { Status, Task } from "@/types/task";
 
-type Props = { task: Task };
+type Props = { task: Task; statuses: Status[] };
 
 function formatDate(value: string) {
     return new Intl.DateTimeFormat("en", {
@@ -14,9 +14,10 @@ function formatDate(value: string) {
     }).format(new Date(value));
 }
 
-export default function TaskDetail({ task }: Props) {
+export default function TaskDetail({ task, statuses }: Props) {
     const [showEditDialog, setShowEditDialog] = useState(false);
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+    const isCompleted = task.status?.slug === "completed";
     return (
         <>
             <Head title={task.title} />
@@ -35,27 +36,25 @@ export default function TaskDetail({ task }: Props) {
                             <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
                                 <div className="flex items-start gap-4">
                                     <div
-                                        className={`mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2 ${task.completed ? "border-[#42b883] bg-[#42b883] text-white" : "border-[#cfd4df]"}`}
+                                        className={`mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2 ${isCompleted ? "border-[#42b883] bg-[#42b883] text-white" : "border-[#cfd4df]"}`}
                                     >
-                                        {task.completed && "✓"}
+                                        {isCompleted && "✓"}
                                     </div>
                                     <div>
                                         <p className="mb-2 text-sm font-medium text-[#7d8595]">
                                             Task #{task.id}
                                         </p>
                                         <h1
-                                            className={`text-3xl font-bold tracking-tight sm:text-4xl ${task.completed ? "text-[#8f97a4] line-through" : ""}`}
+                                            className={`text-3xl font-bold tracking-tight sm:text-4xl ${isCompleted ? "text-[#8f97a4] line-through" : ""}`}
                                         >
                                             {task.title}
                                         </h1>
                                     </div>
                                 </div>
                                 <span
-                                    className={`w-fit rounded-full px-3 py-1.5 text-xs font-semibold ${task.completed ? "bg-[#eaf8f1] text-[#299766]" : "bg-[#fff4df] text-[#b77918]"}`}
+                                    className={`w-fit rounded-full px-3 py-1.5 text-xs font-semibold ${isCompleted ? "bg-[#eaf8f1] text-[#299766]" : "bg-[#fff4df] text-[#b77918]"}`}
                                 >
-                                    {task.completed
-                                        ? "Completed"
-                                        : "In progress"}
+                                    {isCompleted ? "Completed" : "In progress"}
                                 </span>
                             </div>
 
@@ -71,7 +70,9 @@ export default function TaskDetail({ task }: Props) {
                                         Last updated
                                     </p>
                                     <p className="mt-1 font-semibold">
-                                        {formatDate(task.updated_at ?? task.created_at)}
+                                        {formatDate(
+                                            task.updated_at ?? task.created_at,
+                                        )}
                                     </p>
                                 </div>
                             </div>
@@ -119,7 +120,7 @@ export default function TaskDetail({ task }: Props) {
                                     className="rounded-xl border border-[#e1e4eb] px-5 py-3 text-sm font-semibold text-[#667085] transition hover:bg-[#f7f8fa]"
                                 >
                                     Mark as{" "}
-                                    {task.completed ? "incomplete" : "complete"}
+                                    {isCompleted ? "incomplete" : "complete"}
                                 </button>
                                 <Link
                                     href="/tasks"
@@ -134,6 +135,7 @@ export default function TaskDetail({ task }: Props) {
             </main>
             <EditTaskDialog
                 task={task}
+                statuses={statuses}
                 open={showEditDialog}
                 onClose={() => setShowEditDialog(false)}
             />

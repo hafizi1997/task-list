@@ -4,7 +4,6 @@ export type Task = {
     title: string;
     description: string;
     long_description: string | null;
-    completed: boolean;
     created_at: string;
     updated_at?: string;
     status: Status | null;

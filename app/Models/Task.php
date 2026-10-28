@@ -10,12 +10,7 @@ class Task extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title', 'status_id', 'description', 'long_description', 'completed'];
-
-    protected function casts(): array
-    {
-        return ['completed' => 'boolean'];
-    }
+    protected $fillable = ['title', 'status_id', 'description', 'long_description'];
 
     public function status(): BelongsTo
     {

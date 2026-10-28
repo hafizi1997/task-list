@@ -7,6 +7,10 @@
     --primary-foreground: #ffffff;
     --border: #e9ebf1;
     --ring: #5b5ce2;
+    --muted-foreground: #7c8495;
+    --surface: #ffffff;
+    --surface-muted: #f7f8fa;
+    --input: #dfe3eb;
 }
 
 @source '../views';
