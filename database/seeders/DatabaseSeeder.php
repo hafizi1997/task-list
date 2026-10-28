@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Status;
-use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Task;
@@ -16,7 +15,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
         $open = Status::updateOrCreate(['slug' => 'open'], [
             'name' => 'Open',
         ]);
@@ -43,9 +41,5 @@ class DatabaseSeeder extends Seeder
             'status_id' => $completed->id,
             'completed' => true,
         ]);
-        // User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
     }
 }

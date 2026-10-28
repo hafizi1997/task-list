@@ -14,9 +14,3 @@ Route::patch('/tasks/{task}/completion', [TaskController::class, 'toggleCompleti
 Route::delete('/tasks/{task}', [TaskController::class, 'destroy'])->name('tasks.destroy');
 Route::get('/tasks/{task}', [TaskController::class, 'show'])->name('tasks.show');
 
-// how to pass data to inertia
-Route::get('/profile/{user}', function ($user) {
-    return inertia('profile', [
-        'user' => $user,
-    ]);
-});
