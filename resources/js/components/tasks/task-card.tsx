@@ -9,16 +9,17 @@ export function TaskCard({
     task: Task;
     formatDate: (date: string) => string;
 }) {
+    const completed = task.status?.slug === "completed";
     return (
         <Link
             href={`/tasks/${task.id}`}
             className="flex items-start gap-4 border-b border-[#eef0f4] px-5 py-5 transition hover:bg-[#fafaff] last:border-0 sm:px-6"
         >
-            <TaskStatus completed={task.completed} />
+            <TaskStatus completed={completed} />
             <div className="min-w-0 flex-1">
                 <div className="flex flex-col justify-between gap-1 sm:flex-row">
                     <h2
-                        className={`font-semibold ${task.completed ? "text-[#9aa1ad] line-through" : ""}`}
+                        className={`font-semibold ${completed ? "text-[#9aa1ad] line-through" : ""}`}
                     >
                         {task.title}
                     </h2>

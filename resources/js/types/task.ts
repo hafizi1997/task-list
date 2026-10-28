@@ -1,3 +1,4 @@
+export type Status = { id: number; name: string; slug: string };
 export type Task = {
     id: number;
     title: string;
@@ -6,6 +7,7 @@ export type Task = {
     completed: boolean;
     created_at: string;
     updated_at?: string;
+    status: Status | null;
 };
 
 export type PaginatedTasks = {

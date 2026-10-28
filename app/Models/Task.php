@@ -4,14 +4,21 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use  Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
 class Task extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title', 'description', 'long_description', 'completed'];
+    protected $fillable = ['title', 'status_id', 'description', 'long_description', 'completed'];
 
     protected function casts(): array
     {
         return ['completed' => 'boolean'];
+    }
+
+    public function status(): BelongsTo
+    {
+        return $this->belongsTo(Status::class);
     }
 }
